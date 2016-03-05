@@ -61,6 +61,10 @@ struct node *new_node (const char *input) {
   return fresh;
 } //end new_node
 
-void print_list (struct node *cur) {
-  
-}//end print_list
+void print_courses (struct node *cur) {
+  while (cur != NULL) {
+    printf("%s.%d.%d %f %s \n",
+	  cur->c.division, cur->c.department, cur->c.number, cur->c.credit, cur->c.name);
+    cur = cur->next;
+  }//end while
+}//end print_courses
