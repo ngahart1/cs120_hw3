@@ -13,17 +13,21 @@ int main(int argc, char *argv[]){
   int current; //arbitrary initializer
   // struct node courses; //this will be the linked list of courses
   int counter = 0;
+  char line[47];
   while (1){
-    current = fgetc (input);
+     current = fgetc (input);
      if (current == EOF){
        break;
       } //end if
       else if (current == '\n'){
-	printf("\n");
+	line[counter]='\0';
+	printf("%s \n", line);
+	memset(&line[0], 0, sizeof(line));
 	counter = 0;
       } //end else if
       else {
-	printf("%c",current);
+	//printf("%c",current);
+	line[counter] = current;
 	counter++;
       } //end else
   }//end first while
