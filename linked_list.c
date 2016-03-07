@@ -1,21 +1,9 @@
 //Neil Gahart
-
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "linked_list.h"
 
-struct course {
-  char *division;
-  int department;
-  int number;
-  float credit;
-  char *name;
-}; //end struct
-
-struct node {
-  struct course c;
-  struct node *next; //link to successor node
-}; //end struct
 
 struct node *new_node (const char *input) {
   //input is one line of input from the text file. ex: EN.550.171 4.0 Discrete Mathematics
@@ -27,11 +15,12 @@ struct node *new_node (const char *input) {
   } //end if
 
   //Get division
+ 
   char division[3];
   division[0] = input[0];
   division[1] = input[1];
   division[2] = '\0';
-  fresh->c.division = division;
+  strcpy(fresh->c.division, division);
 
   int department = 0;
   department += (input[3]-48)*100;
@@ -55,16 +44,26 @@ struct node *new_node (const char *input) {
       name[i-15] = input[i];
   }//end for
   name[32] = '\0';
-  fresh -> c.name = name;
-
+  strcpy(fresh->c.name, name);
+  
   fresh->next = NULL;
   return fresh;
 } //end new_node
 
-void print_courses (struct node *cur) {
-  while (cur != NULL) {
-    printf("%s.%d.%d %f %s \n",
-	  cur->c.division, cur->c.department, cur->c.number, cur->c.credit, cur->c.name);
-    cur = cur->next;
-  }//end while
+void print_course (struct node *cur) {
+    printf("%s", cur->c.division);
+    printf(".%d.%d %1.1f %s\n", cur->c.department, cur->c.number, cur->c.credit, cur->c.name);
 }//end print_courses
+
+int course_equal (struct node *node1, struct node *node2) {
+  //returns 1 if the two input nodes are the same, 0 otherwise
+  int ok=1;
+  if (strcmp(node1->c.division, node2->c.division) != 0) {ok=0;}
+  if (node1->c.department != node2->c.department) {ok=0;}
+  if (node1->c.number != node2->c.number) {ok=0;}
+  if (node1->c.credit != node2->c.credit) {ok=0;}
+  if (strcmp(node1->c.name, node2->c.name) != 0) {ok=0;}
+  return ok;
+}//end course_equal
+  
+    
