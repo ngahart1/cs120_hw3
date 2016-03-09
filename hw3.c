@@ -48,6 +48,8 @@ int main(int argc, char *argv[]){
       } //end else
   }//end while
 
+  struct transcript *t = NULL;
+  
   char choice;
   while(1) {
     printf("Please enter your choice: ");
@@ -66,7 +68,12 @@ int main(int argc, char *argv[]){
     else if (choice == 'R') {
       do_r(head);
     }
-    
+    else if (choice == 'A') {
+      t=do_a(t, head);
+    }
+    else if (choice == 'I') {
+      do_i(t);
+    }
     else if (choice == 'Q') {
       return 0;
     }

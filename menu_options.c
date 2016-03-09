@@ -1,16 +1,33 @@
+//menu_options.c
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "menu_options.h"
 #include "linked_list.h"
 
-void do_a (struct transcript *t, struct node *cur) {
+void do_i (struct transcript *t) {
+  transcript *cur = t;
+  while (cur != NULL){
+    print_course(cur->n);
+    printf(" %d.%c", cur->year, cur->season);
+    printf(" %c%c", cur->grade, cur->grade_extra);
+    printf("\n"); 
+    cur = cur->next;
+  } //end while
+  char dummy;
+  scanf("%c", &dummy);
+} //end do_i  
+
+
+struct transcript *do_a (struct transcript *t, struct node *cur) {
   printf("Please enter the course identifier (xx.ddd.nnn): ");
   char identifier[11];
   scanf("%s", identifier);
   char division[3] = {identifier[0], identifier[1], '\0'};
   int department = 100*(identifier[3]-48) + 10*(identifier[4]-48) + (identifier[5]-48);
   int number = 100*(identifier[7]-48) + 10*(identifier[8]-48) + (identifier[9]-48);
+  char dummy=scanf("%c", &dummy);
+
   int found = 0;
   while (!found && cur != NULL) {
     int curdept = cur->c.department;
@@ -23,37 +40,44 @@ void do_a (struct transcript *t, struct node *cur) {
   }//end while
   if (!found){
     puts("Invalid");
-    return;
+    return t; 
   }//end if
   printf("Please enter the semester (yyyy.s): ");
   char sem[7];
   scanf("%s", sem);
   int semester = 1000*(sem[0]-48)+100*(sem[1]-48)+10*(sem[2]-48)+(sem[3]-48);
   char season = sem[5];
+  dummy = scanf("%c", &dummy);
   printf("Please enter grade (Gg): ");
   char Gg[3];
+  scanf("%s", Gg);
   char grade = Gg[0];
   char grade_extra = Gg[1];
+  // dummy = scanf("%c", &dummy);
   struct transcript *fresh = malloc(sizeof(struct transcript));
   if (fresh == NULL){
     puts("Failed to allocate a node");
-    return;
+    return t;
   } //end if
 
-  fresh->n = cur; ////////ERROR POSSIBILITY
+  fresh->n = cur; 
   fresh->year = semester;
   fresh->season = season;
   fresh->grade = grade;
   fresh->grade_extra = grade_extra;
   fresh->next = NULL; //initializer
+  do_i(fresh);
   
   //Now, need to go through and insert new node in appropriate place
   if (t == NULL) {
     t = fresh;
+    puts("added");
+    return t;
   } //end if
   else {
     //int inserted = 0;
     transcript *temp = t;
+    printf("%d transc \n", transc_compare(temp, t));
     if (temp->next == NULL) { //this is the case of only a single node in the list
       int comp = transc_compare(fresh, temp);
       if (comp == -100) {
@@ -62,12 +86,12 @@ void do_a (struct transcript *t, struct node *cur) {
       else if (comp == 0 || comp == 1) {
 	fresh->next = temp;
 	puts("added");
-	return;
+	return fresh;
       }
       else { //comp == 2
 	temp -> next = fresh;
 	puts("added");
-	return;
+	return t;
       } //end else
     } //end if
     else { //ie at least two nodes in the list
@@ -81,34 +105,36 @@ void do_a (struct transcript *t, struct node *cur) {
 	int comp_after = transc_compare(temp2, fresh);
 	if (comp_after == -100) {
 	  puts("present");
-	  return;
+	  return t;
 	}
 	if (comp_after == 0 || comp_after == 2) {
 	  temp->next = fresh;
 	  fresh->next = temp2;
 	  puts("added");
-	  return;
+	  return t;
 	} //end if
 	else if (temp2->next == NULL) { //temp2 is last node in list
 	  if (comp_after == 1) {
 	    temp2->next = fresh;
 	    puts("added");
-	    return;
+	    return t;
 	  } //end if
 	} //end else if
 	else { 
 	  temp = temp->next;
 	  temp2 = temp2->next;
-	}
+	} 
       }//end while
     }//end else
   }//end else
+  return t;
 }//end do_a
 
 void do_p (struct node *cur){
   //Prints all courses in the catalog
   while (cur != NULL){
     print_course(cur);
+    printf("\n"); //this allows print_course function to not have \n
     cur = cur->next;
   } //end while
   char dummy;
