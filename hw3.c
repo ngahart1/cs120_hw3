@@ -7,6 +7,9 @@
 #include "menu_options.h"
 
 int main(int argc, char *argv[]){
+  if (argc == 0) {
+    puts("Need to include file");
+  }
   FILE *input = fopen(argv[1],"r");
   if (input == NULL){
     puts("Could not open file");
@@ -49,6 +52,7 @@ int main(int argc, char *argv[]){
   while(1) {
     printf("Please enter your choice: ");
     scanf("%c", &choice);
+    if (!isspace(choice)) {
     choice = toupper(choice);
     if (choice == 'P'){
       do_p(head);
@@ -59,12 +63,16 @@ int main(int argc, char *argv[]){
     else if (choice == 'T') {
       do_t(head);
     }
+    else if (choice == 'R') {
+      do_r(head);
+    }
+    
     else if (choice == 'Q') {
       return 0;
     }
     else {
       puts("Invalid input");
     }
-      
+    }
   } //end while
 }//end main

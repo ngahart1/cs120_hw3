@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "linked_list.h"
 
-
+  
 struct node *new_node (const char *input) {
   //input is one line of input from the text file. ex: EN.550.171 4.0 Discrete Mathematics
   //returns a node with correct payload and a successor pointer to NULL
@@ -66,4 +66,38 @@ int course_equal (struct node *node1, struct node *node2) {
   return ok;
 }//end course_equal
   
-    
+int transc_compare (struct transcript *t1, struct transcript *t2) {
+  //Wish to determine which of the two nodes comes first
+  //-100: nodes are exactly the same
+  //0: nodes are from same semester
+  //1: t1 is from earlier semester
+  //2: t2 is from earlier semester
+  int year_diff = t1->year - t2->year; //if 0, same. if >0, t1 is later. if <0, t2 is later
+  int season_diff = t1->season - t2->season; //if 0, same. if >0, t1 is spring and t2 is fall.
+  int same_course = course_equal(t1->n, t2->n); //1 if nodes are same, 0 otherwise
+  if (year_diff==0 && season_diff==0 && same_course==1) {
+    return -100;
+  }
+  else if (year_diff == 0 && season_diff == 0) {
+    return 0;
+  }
+  else {
+    if (year_diff > 0) {
+      return 2;
+    }
+    else if (year_diff < 0) {
+      return 1;
+    }
+    else { //year_diff == 0
+      if (season_diff > 0) {
+	return 1;
+      }
+      else if (season_diff < 0) {
+	return 2;
+      }
+      else { //year_diff == 0 and season_diff == 0
+	return 0;
+      } //end else
+    } //end else
+  } //end else 
+} //end transc_compare
